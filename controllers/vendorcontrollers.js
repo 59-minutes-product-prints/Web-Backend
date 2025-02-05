@@ -1,6 +1,6 @@
+// controllers/vendorcontroller.js
 import Vendor from "../models/vendor.js";
 
-// Get all vendors
 export const getVendors = async (req, res) => {
   try {
     const vendors = await Vendor.find();
@@ -11,23 +11,33 @@ export const getVendors = async (req, res) => {
   }
 };
 
-// Add a new vendor
-export const addVendor = async (req, res) => {
-  const { name, location } = req.body;
-
+export const getVendorById = async (req, res) => {
   try {
-    // Validate input data
-    if (!name || !location) {
-      return res.status(400).json({ message: "Name and location are required" });
+    const vendor = await Vendor.findById(req.params.id);
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor not found" });
     }
-
-    // Create and save the new vendor
-    const newVendor = new Vendor({ name, location });
-    await newVendor.save();
-
-    res.status(201).json({ message: "Vendor added successfully", vendor: newVendor });
+    res.status(200).json({ vendor });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Unable to add vendor" });
+    res.status(500).json({ message: "Error fetching vendor" });
+  }
+};
+
+export const registerVendor = async (req, res) => {
+  try {
+    const { name, email, phone, location, services } = req.body;
+    const newVendor = new Vendor({
+      name,
+      email,
+      phone,
+      location,
+      services
+    });
+    await newVendor.save();
+    res.status(201).json({ message: "Vendor registered successfully", vendor: newVendor });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error registering vendor" });
   }
 };

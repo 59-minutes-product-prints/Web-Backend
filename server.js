@@ -1,53 +1,55 @@
+// server.js
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import helmet from "helmet"; // Security headers
-import morgan from "morgan"; // Request logging
-import mongoose from "mongoose";
-import authroutes from "./routes/authroutes.js";
-import vendorroutes from "./routes/vendorroutes.js";
-import orderroutes from "./routes/orderroutes.js";
+import helmet from "helmet";
+import morgan from "morgan";
+import connectdb from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import vendorRoutes from "./routes/vendorRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 import { errorhandler } from "./middlewares/errorhandler.js";
 import { authMiddleware } from "./middlewares/authmiddlewares.js";
-import connectdb from "./config/db.js";
-import admin from "./config/firebase.js";
 
 // Load environment variables
 dotenv.config();
 
-// Initialize app
+// Initialize express app
 const app = express();
 
-// Security headers
+// Security middleware
 app.use(helmet());
 
-// Request logging (development mode)
+// Request logging in development
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
 // Middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Connect to database
+connectdb();
 
 // Routes
-app.use("/api/auth", authroutes);
-app.use("/api/vendors", vendorroutes);
-app.use("/api/orders", authMiddleware, orderroutes); // Protected orders route
-
-// Error handling
-app.use(errorhandler);
-
-// Database connection
-connectdb();
+app.use("/api/auth", authRoutes);
+app.use("/api/vendors", vendorRoutes);
+app.use("/api/orders", authMiddleware, orderRoutes);
 
 // Health check route
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "API is running!" });
+  res.json({ message: "API is running" });
 });
+
+// Error handling middleware
+app.use(errorhandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});
 
 export default app;
