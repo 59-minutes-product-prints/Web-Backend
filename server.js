@@ -33,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Connect to database
 connectdb();
+// console.log(MongoDB connected sucessful);
 
 // Routes
 app.use("/api/auth", authRoutes);

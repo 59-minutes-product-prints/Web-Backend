@@ -21,4 +21,5 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true } // New: Auto-generate `createdAt` and `updatedAt`
 );
 
-export default mongoose.model("Order", orderSchema);
+export default mongoose.models.Order || mongoose.model("Order", orderSchema);
+
