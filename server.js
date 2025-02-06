@@ -5,9 +5,10 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import connectdb from "./config/db.js";
-import authRoutes from "./routes/authRoutes.js";
-import vendorRoutes from "./routes/vendorRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
+import authRoutes from "./Routes/authRoutes.js";
+import vendorRoutes from "./Routes/vendorRoutes.js";
+import orderRoutes from "./Routes/orderRoutes.js";
+
 import { errorhandler } from "./middlewares/errorhandler.js";
 import { authMiddleware } from "./middlewares/authmiddlewares.js";
 

@@ -1,5 +1,5 @@
 import express from "express";
-import { getVendors, getVendorById, registerVendor } from "../controllers/vendorcontroller.js";
+import { getVendors, getVendorById, registerVendor } from "../Controllers/vendorController.js";
 import { authMiddleware, adminOnly } from "../middlewares/authmiddlewares.js"; // Fixed import name
 
 const router = express.Router();
